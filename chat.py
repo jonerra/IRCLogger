@@ -15,7 +15,6 @@ password = 'oauth:piobgbihm1bjutnxyi9o44fqqj7vty'
 irc = IRC()
 irc.connect(server, streamers, password, nickname)
 
-
 while True:
     try:
         text = irc.get_text()
@@ -23,3 +22,6 @@ while True:
     except KeyboardInterrupt:
         print('Interrupted')
         break
+
+file = "chatty.txt"
+irc.clean(file)

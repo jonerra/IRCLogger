@@ -50,6 +50,43 @@ class IRC:
             print('(%s) %s %s: %s') % (channel, ctime, nstring, ntext)
 
             # Open text file to append new messages
-            chat_text = open("chat2.txt", "a")
+            chat_text = open("chatty.txt", "a")
             chat_text.write(str(channel) + "\t" + str(nstring) + "\t" + str(cdate) + "\t" + str(ctime) + "\t" + str(ntext))
             chat_text.close()
+			
+	def clean(self, txt):
+		# Open file and read it
+		file = open(txt, "r")
+		lines = file.readlines()
+		file.close()
+
+		# Open file to write
+		f = open(txt, "w")
+
+		# Format unformatted lines and rewrite to file
+		for line in lines:
+			if "tmi.twitch.tv" in line:
+				word = line.find(":", 3)
+				ntext = line[word:][1:]
+
+				# Extract username
+				string = line.find("!")
+				nstring = line[:string][1:]
+
+				# Extract channel
+				chan = line.find("#")
+				channel = line[chan:word][1:-1]
+
+				# Get current date and time
+				ctime = time.strftime("%I:%M:%S")
+				cdate = time.strftime("%m/%d/%Y")
+				
+				new = str(channel) + "\t" + str(nstring) + "\t" + str(cdate) + "\t" + str(ctime) + "\t" + str(ntext)
+				
+				# Delete initial join messages
+				if "adiosz" not in line:
+					f.write(new)
+			else:
+				f.write(line)
+
+		f.close()
