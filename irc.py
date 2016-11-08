@@ -11,14 +11,15 @@ class IRC:
     def send(self, chan, msg):
         self.irc.send("PRIVMSG" + chan + " " + msg + "\n")
 
-    def connect(self, server, channel, password, botnick):
+    def connect(self, server, channels, password, botnick):
         # defines the socket
         print("connecting to:" + server)
         self.irc.connect((server, 6667))  # connects to the server
         self.irc.send("PASS " + password + "\n")
         self.irc.send("USER " + botnick + " " + botnick + " " + botnick + " :This is a fun bot\n")  # User Auth
         self.irc.send("NICK " + botnick + "\n")
-        self.irc.send("JOIN " + channel + "\n")  # join the chan
+        for channel in channels:
+            self.irc.send("JOIN " + channel + "\n")  # join the chan
 
     def get_text(self):
         text = self.irc.recv(2040)  # receive the text
@@ -38,13 +39,17 @@ class IRC:
             string = text.find("!")
             nstring = text[:string][1:]
 
+            # Extract channel
+            chan = text.find("#")
+            channel = text[chan:word][1:-1]
+
             # Get current date and time
             ctime = time.strftime("%I:%M:%S")
             cdate = time.strftime("%m/%d/%Y")
 
-            print('%s %s: %s') % (ctime, nstring, ntext)
+            print('(%s) %s %s: %s') % (channel, ctime, nstring, ntext)
 
             # Open text file to append new messages
-            chat_text = open("mango.txt", "a")
-            chat_text.write(str(nstring) + "\t" + str(cdate) + "\t" + str(ctime) + "\t" + str(ntext))
+            chat_text = open("chat2.txt", "a")
+            chat_text.write(str(channel) + "\t" + str(nstring) + "\t" + str(cdate) + "\t" + str(ctime) + "\t" + str(ntext))
             chat_text.close()
