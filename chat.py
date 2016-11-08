@@ -8,8 +8,8 @@ if len(sys.argv) == 3:
 else:
     streamers = "#" + sys.argv[1]
 server = "irc.twitch.tv"
-nickname = "adiosz"
-password = 'oauth:piobgbihm1bjutnxyi9o44fqqj7vty'
+nickname = "redacted"
+password = 'redacted'
 
 # Connect to server using above parameters
 irc = IRC()
